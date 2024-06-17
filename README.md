@@ -1,3 +1,3 @@
 # mat_project
-Cílem bude jednoduchý discord bot
-Bude mít funkce 
+##Projekt o rozpoznávání tváří
+##Cíl projektu je rozpoznat tváře z kamery a říct zda je tvář v databázi nebo není.
