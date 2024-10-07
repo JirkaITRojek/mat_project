@@ -19,6 +19,25 @@ with open("token.txt") as file:
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
+
+@bot.event
+async def on_message(message):
+    if message.content == ".":
+        # Seznam příkazů a jejich popisy
+        commands_list = """
+        Dostupné příkazy:
+        - `.ping`: Zobrazí "Pong!"
+        - `.pong`: Zobrazí "Ping!"
+        - `.meme <font> <text>`: Vytvoří meme s daným fontem a textem.
+        - `.wakeup <uživatel>`: Pošle soukromou zprávu uživateli.
+        - `.je <uživatel>`: Odpoví vtipně na zmíněného uživatele.
+        - `.hello`: Pozdraví tě.
+        - `.gay`: Vtipná odpověď.
+        - `.ilikewomen`: Odesílá GIF.
+        """
+        await message.channel.send(commands_list)
+    await bot.process_commands(message)
+
 available_fonts = {
     "brit": "./fonts/ANTIGB__.TTF",
     "nemec": "./fonts/ANTIGRG_.TTF",
@@ -27,7 +46,11 @@ available_fonts = {
 }
 
 @bot.command()
-async def meme(ctx, font: str, *, text: str):
+async def meme(ctx, font: str = None, *, text: str = None):
+    if font is None or text is None:
+        await ctx.send("Použití příkazu: `.meme <font> <text>`. Dostupné fonty jsou: " + ", ".join(available_fonts.keys()))
+        return
+
     try:
         # Zkontroluj, zda uživatel zvolil dostupný font
         if font.lower() not in available_fonts:
@@ -100,7 +123,11 @@ async def pong(ctx):
 
 
 @bot.command()
-async def wakeup(ctx, member: discord.Member):
+async def wakeup(ctx, member: discord.Member = None):
+    if member is None:
+        await ctx.send("Použití příkazu: `.wakeup @<uživatel>` - Pošle 10 zpráv uživateli do DM.")
+        return
+
     try:
 
         if member.display_name.lower() == "mikeš síť guy":
