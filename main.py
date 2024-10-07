@@ -1,20 +1,12 @@
 import discord
 from discord.ext import commands
-import openai
 from PIL import Image, ImageDraw, ImageFont
-import requests
 from io import BytesIO
 from textwrap import fill
 
 
 with open("token.txt") as file:
     token = file.read()
-
-#with open('api_key.txt', 'r') as file:
-#    OPENAI_API_KEY = file.read().strip()  # Načtení a odstranění případných bílých znaků
-
-# Inicializace OpenAI
-#openai.api_key = OPENAI_API_KEY
 
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
@@ -109,19 +101,6 @@ async def meme(ctx, font: str = None, *, text: str = None):
         await ctx.send(f"Došlo k chybě při generování meme: {str(e)}")
 
 
-@bot.event
-async def on_ready():
-    print("Slime is here! propably?")
-
-@bot.command()
-async def ping(ctx):
-    await ctx.send('Pong!')
-
-@bot.command()
-async def pong(ctx):
-    await ctx.send('Ping!')
-
-
 @bot.command()
 async def wakeup(ctx, member: discord.Member = None):
     if member is None:
@@ -129,7 +108,6 @@ async def wakeup(ctx, member: discord.Member = None):
         return
 
     try:
-
         if member.display_name.lower() == "mikeš síť guy":
             await ctx.send("Nemohu posílat zprávy uživateli.")
             return
@@ -148,17 +126,33 @@ async def wakeup(ctx, member: discord.Member = None):
         # Pokud bot nemůže odeslat zprávu, například pokud má uživatel zakázané DM
         await ctx.send(f"Nemohu odeslat zprávu uživateli {member.display_name}. Možná má zakázané přímé zprávy.")
 
+
 @bot.command()
-async def je(ctx, member: discord.Member):
+async def je(ctx, member: discord.Member = None):
+    if member is None:
+        await ctx.send("Použití příkazu: `.je @<uživatel>` - Odpoví vtipně na zmíněného uživatele.")
+        return
+
     await ctx.send(f'Tvůj názor nás nezajímá {member.mention}!')
+
+    # Odeslání obrázku
+    try:
+        # Cesta k obrázku
+        image_path = "./image/not-interested.jpg"
+        await ctx.send(file=discord.File(image_path))
+    except Exception as e:
+        await ctx.send(f"Nepodařilo se odeslat obrázek: {str(e)}")
+
 
 @bot.command()
 async def hello(ctx):
     await ctx.send(f'Ahoj, {ctx.author}!')
 
+
 @bot.command()
 async def gay(ctx):
     await ctx.send(f'Je , {ctx.author}!')
+
 
 @bot.command()
 async def ilikewomen(ctx):
@@ -166,6 +160,11 @@ async def ilikewomen(ctx):
     await ctx.send(gif_url)
 
 
+@bot.event
+async def on_ready():
+    print("Slime is here! Probably?")
 
 
 bot.run(token)
+
+
