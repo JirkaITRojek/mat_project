@@ -19,44 +19,59 @@ with open("token.txt") as file:
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
+available_fonts = {
+    "brit": "./fonts/ANTIGB__.TTF",
+    "nemec": "./fonts/ANTIGRG_.TTF",
+    "krysa": "./fonts/rattfinny.ttf",
+    # Přidej další fonty podle potřeby
+}
+
 @bot.command()
-async def meme(ctx, *, text: str):
+async def meme(ctx, font: str, *, text: str):
     try:
+        # Zkontroluj, zda uživatel zvolil dostupný font
+        if font.lower() not in available_fonts:
+            await ctx.send("Není dostupný tento font. Použij některý z těchto: " + ", ".join(available_fonts.keys()))
+            return
+
+        # Načti font na základě výběru uživatele
+        font_path = available_fonts[font.lower()]
+
         # Zalamování textu na více řádků (pokud je dlouhý)
-        wrapped_text = fill(text, width=20)  # Změň šířku podle potřeby (menší šířka znamená kratší řádky)
+        wrapped_text = fill(text, width=20)
 
         # Vytvoření základního obrázku (bílý pozadí)
         img = Image.new('RGB', (500, 300), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
 
-        # Načti font (nahradit cestu k tvému ttf souboru)
-        font = ImageFont.truetype("./fonts/ANTIGB__.ttf", size=30)  # Změň velikost písma podle potřeby
+        # Načti vybraný font
+        meme_font = ImageFont.truetype(font_path, size=30)
 
         # Rozděl zalomený text na jednotlivé řádky
         lines = wrapped_text.split('\n')
 
         # Výpočet celkové výšky textu
-        total_text_height = sum([d.textbbox((0, 0), line, font=font)[3] for line in lines])
+        total_text_height = sum([d.textbbox((0, 0), line, font=meme_font)[3] for line in lines])
 
         # Začátek Y (vertikální zarovnání na střed)
         current_y = (img.height - total_text_height) // 2
 
         # Pro každý řádek textu: zarovnat na střed a vykreslit
         for line in lines:
-            text_bbox = d.textbbox((0, 0), line, font=font)
+            text_bbox = d.textbbox((0, 0), line, font=meme_font)
             text_width = text_bbox[2] - text_bbox[0]
 
             # Vypočítat x souřadnici pro zarovnání na střed
             text_x = (img.width - text_width) // 2
 
             # Přidání obrysu textu
-            d.text((text_x - 1, current_y - 1), line, font=font, fill=(0, 0, 0))
-            d.text((text_x + 1, current_y - 1), line, font=font, fill=(0, 0, 0))
-            d.text((text_x - 1, current_y + 1), line, font=font, fill=(0, 0, 0))
-            d.text((text_x + 1, current_y + 1), line, font=font, fill=(0, 0, 0))
+            d.text((text_x - 1, current_y - 1), line, font=meme_font, fill=(0, 0, 0))
+            d.text((text_x + 1, current_y - 1), line, font=meme_font, fill=(0, 0, 0))
+            d.text((text_x - 1, current_y + 1), line, font=meme_font, fill=(0, 0, 0))
+            d.text((text_x + 1, current_y + 1), line, font=meme_font, fill=(0, 0, 0))
 
             # Vložení hlavního bílého textu
-            d.text((text_x, current_y), line, font=font, fill=(255, 255, 255))
+            d.text((text_x, current_y), line, font=meme_font, fill=(255, 255, 255))
 
             # Posun y souřadnice dolů pro další řádek
             current_y += text_bbox[3] - text_bbox[1]
