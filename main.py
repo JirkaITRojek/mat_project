@@ -22,33 +22,44 @@ bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 @bot.command()
 async def meme(ctx, *, text: str):
     try:
-        # Zabal text, pokud je moc dlouhý
-        wrapped_text = fill(text, width=40)
+        # Zalamování textu na více řádků (pokud je dlouhý)
+        wrapped_text = fill(text, width=20)  # Změň šířku podle potřeby (menší šířka znamená kratší řádky)
 
         # Vytvoření základního obrázku (bílý pozadí)
         img = Image.new('RGB', (500, 300), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
 
-        # Načti font (nahradit cestu k Impact.ttf)
-        font = ImageFont.truetype("./fonts/ANTIGB__.ttf", size=40)
+        # Načti font (nahradit cestu k tvému ttf souboru)
+        font = ImageFont.truetype("./fonts/ANTIGB__.ttf", size=30)  # Změň velikost písma podle potřeby
 
-        # Získání velikosti textu
-        text_bbox = d.textbbox((0, 0), wrapped_text, font=font)
-        text_width = text_bbox[2] - text_bbox[0]
-        text_height = text_bbox[3] - text_bbox[1]
+        # Rozděl zalomený text na jednotlivé řádky
+        lines = wrapped_text.split('\n')
 
-        # Zarovnání textu na střed
-        text_x = (img.width - text_width) // 2
-        text_y = (img.height - text_height) // 2
+        # Výpočet celkové výšky textu
+        total_text_height = sum([d.textbbox((0, 0), line, font=font)[3] for line in lines])
 
-        # Přidání obrysu textu
-        d.text((text_x-1, text_y-1), wrapped_text, font=font, fill=(0, 0, 0))
-        d.text((text_x+1, text_y-1), wrapped_text, font=font, fill=(0, 0, 0))
-        d.text((text_x-1, text_y+1), wrapped_text, font=font, fill=(0, 0, 0))
-        d.text((text_x+1, text_y+1), wrapped_text, font=font, fill=(0, 0, 0))
+        # Začátek Y (vertikální zarovnání na střed)
+        current_y = (img.height - total_text_height) // 2
 
-        # Vložení hlavního bílého textu
-        d.text((text_x, text_y), wrapped_text, font=font, fill=(255, 255, 255))
+        # Pro každý řádek textu: zarovnat na střed a vykreslit
+        for line in lines:
+            text_bbox = d.textbbox((0, 0), line, font=font)
+            text_width = text_bbox[2] - text_bbox[0]
+
+            # Vypočítat x souřadnici pro zarovnání na střed
+            text_x = (img.width - text_width) // 2
+
+            # Přidání obrysu textu
+            d.text((text_x - 1, current_y - 1), line, font=font, fill=(0, 0, 0))
+            d.text((text_x + 1, current_y - 1), line, font=font, fill=(0, 0, 0))
+            d.text((text_x - 1, current_y + 1), line, font=font, fill=(0, 0, 0))
+            d.text((text_x + 1, current_y + 1), line, font=font, fill=(0, 0, 0))
+
+            # Vložení hlavního bílého textu
+            d.text((text_x, current_y), line, font=font, fill=(255, 255, 255))
+
+            # Posun y souřadnice dolů pro další řádek
+            current_y += text_bbox[3] - text_bbox[1]
 
         # Uložení obrázku do paměti
         with BytesIO() as image_binary:
