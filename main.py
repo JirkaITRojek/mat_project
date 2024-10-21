@@ -272,19 +272,7 @@ async def play_next_song(ctx):
 
 # Funkce, která spustí další skladbu po ukončení přehrávání
 def on_song_end(ctx):
-    # Před stažením nové skladby odstraň starý soubor
-    if os.path.exists('song.mp3'):
-        os.remove('song.mp3')
-
-    if os.path.exists('song.mp3.mp3'):
-        os.remove('song.mp3.mp3')
-    fut = play_next_song(ctx)
-    loop = asyncio.get_event_loop()  # Získání event loop
-    fut = asyncio.run_coroutine_threadsafe(fut, loop)  # Vykonání coroutine
-    try:
-        fut.result()
-    except Exception as e:
-        print(f'Chyba při spuštění další skladby: {e}')
+    bot.loop.create_task(play_next_song(ctx))
 
 
 @bot.command()
