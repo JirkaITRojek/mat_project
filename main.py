@@ -4,11 +4,13 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from textwrap import fill
 import requests
+import yt_dlp as youtube_dl  # Přidáno pro stahování zvuku z YouTube
 
 
 with open("token.txt") as file:
     token = file.read()
 
+FFMPEG_PATH = 'C:/ffmpeg/bin/ffmpeg.exe'  # Zadej zde cestu k ffmpeg.exe
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
@@ -28,9 +30,12 @@ async def on_message(message):
         - `.gay`: Vtipná odpověď.
         - `.ilikewomen`: Odesílá GIF.
         - `.quote`: Získá náhodný citát z API.
+        - `.play <YouTube URL>`: Přehrává zvuk z YouTube videa.
+        - `.leave`: Opuštění hlasového kanálu.
         """
         await message.channel.send(commands_list)
     await bot.process_commands(message)
+
 
 
 available_fonts = {
@@ -185,6 +190,45 @@ async def quote(ctx):
         # Zachytí chybu a odešle ji do Discordu
         await ctx.send(f"Došlo k chybě: {str(e)}")
 
+@bot.command()
+async def play(ctx, url: str = None):
+    if url is None:
+        await ctx.send("Použijte příkaz `.play <YouTube URL>`.")
+        return
+
+    voice_client = ctx.voice_client
+
+    # Pokud bot není připojen k hlasovému kanálu, připoj se k autorovi
+    if not voice_client:
+        if ctx.author.voice:
+            channel = ctx.author.voice.channel
+            voice_client = await channel.connect()
+        else:
+            await ctx.send("Nejste připojeni v hlasovém kanálu.")
+            return
+
+    # Nastavení yt-dlp pro stažení zvuku z YouTube
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'outtmpl': 'song.mp3',  # Uloží stažený zvuk do souboru song.mp3
+        'ffmpeg_location': FFMPEG_PATH,  # Nastav cestu k ffmpeg
+    }
+
+    # Stáhnutí a přehrání zvuku
+    try:
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+
+        # Přehrání staženého souboru v hlasovém kanálu s FFmpeg cestou
+        voice_client.play(discord.FFmpegPCMAudio('song.mp3', executable=FFMPEG_PATH), after=lambda e: print(f'Přehrávání ukončeno: {e}'))
+        await ctx.send(f"Přehrávám zvuk z {url}")
+    except Exception as e:
+        await ctx.send(f"Došlo k chybě při přehrávání: {str(e)}")
 
 @bot.event
 async def on_ready():
