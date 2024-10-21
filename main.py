@@ -5,12 +5,16 @@ from io import BytesIO
 from textwrap import fill
 import requests
 import yt_dlp as youtube_dl  # Přidáno pro stahování zvuku z YouTube
-
+import os
+import asyncio
 
 with open("token.txt") as file:
     token = file.read()
 
 FFMPEG_PATH = 'C:/ffmpeg/bin/ffmpeg.exe'  # Zadej zde cestu k ffmpeg.exe
+# Fronta pro skladby
+song_queue = []
+current_song = None
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
@@ -18,7 +22,6 @@ bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 @bot.event
 async def on_message(message):
     if message.content == ".":
-        # Seznam příkazů a jejich popisy
         commands_list = """
         Dostupné příkazy:
         - `.ping`: Zobrazí "Pong!"
@@ -31,11 +34,14 @@ async def on_message(message):
         - `.ilikewomen`: Odesílá GIF.
         - `.quote`: Získá náhodný citát z API.
         - `.play <YouTube URL>`: Přehrává zvuk z YouTube videa.
+        - `.next <YouTube URL>`: Přidá skladbu do fronty.
+        - `.skip`: Přeskočí aktuálně hranou skladbu.
+        - `.stop`: Zastaví aktuální skladbu.
+        - `.resume`: Obnoví zastavenou skladbu.
         - `.leave`: Opuštění hlasového kanálu.
         """
         await message.channel.send(commands_list)
     await bot.process_commands(message)
-
 
 
 available_fonts = {
@@ -45,10 +51,12 @@ available_fonts = {
     # Přidej další fonty podle potřeby
 }
 
+
 @bot.command()
 async def meme(ctx, font: str = None, *, text: str = None):
     if font is None or text is None:
-        await ctx.send("Použití příkazu: `.meme <font> <text>`. Dostupné fonty jsou: " + ", ".join(available_fonts.keys()))
+        await ctx.send(
+            "Použití příkazu: `.meme <font> <text>`. Dostupné fonty jsou: " + ", ".join(available_fonts.keys()))
         return
 
     try:
@@ -190,8 +198,11 @@ async def quote(ctx):
         # Zachytí chybu a odešle ji do Discordu
         await ctx.send(f"Došlo k chybě: {str(e)}")
 
+
 @bot.command()
 async def play(ctx, url: str = None):
+    global current_song  # Declare as global to modify it
+
     if url is None:
         await ctx.send("Použijte příkaz `.play <YouTube URL>`.")
         return
@@ -207,6 +218,32 @@ async def play(ctx, url: str = None):
             await ctx.send("Nejste připojeni v hlasovém kanálu.")
             return
 
+    # Přidání URL do fronty
+    song_queue.append(url)
+
+    # Pokud momentálně nic nehraje, přehraj první skladbu z fronty
+    if not voice_client.is_playing():
+        await play_next_song(ctx)
+
+    current_song = url  # Uložení aktuální skladby
+
+
+async def play_next_song(ctx):
+    global current_song  # Declare as global to modify it
+
+    if len(song_queue) == 0:
+        await ctx.send("Fronta je prázdná.")
+        return
+
+    voice_client = ctx.voice_client
+
+    # Vezme první URL ze seznamu a stáhne ji
+    url = song_queue.pop(0)
+
+    # Před stažením nové skladby odstraň starý soubor
+    if os.path.exists('song.mp3'):
+        os.remove('song.mp3')
+
     # Nastavení yt-dlp pro stažení zvuku z YouTube
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -215,7 +252,7 @@ async def play(ctx, url: str = None):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        'outtmpl': 'song.mp3',  # Uloží stažený zvuk do souboru song.mp3
+        'outtmpl': 'song',  # Uloží stažený zvuk do souboru song.mp3
         'ffmpeg_location': FFMPEG_PATH,  # Nastav cestu k ffmpeg
     }
 
@@ -225,10 +262,89 @@ async def play(ctx, url: str = None):
             ydl.download([url])
 
         # Přehrání staženého souboru v hlasovém kanálu s FFmpeg cestou
-        voice_client.play(discord.FFmpegPCMAudio('song.mp3', executable=FFMPEG_PATH), after=lambda e: print(f'Přehrávání ukončeno: {e}'))
+        voice_client.play(discord.FFmpegPCMAudio('song.mp3', executable=FFMPEG_PATH), after=lambda e: on_song_end(ctx))
         await ctx.send(f"Přehrávám zvuk z {url}")
+
+        current_song = url  # Update the currently playing song
     except Exception as e:
         await ctx.send(f"Došlo k chybě při přehrávání: {str(e)}")
+
+
+# Funkce, která spustí další skladbu po ukončení přehrávání
+def on_song_end(ctx):
+    # Před stažením nové skladby odstraň starý soubor
+    if os.path.exists('song.mp3'):
+        os.remove('song.mp3')
+
+    if os.path.exists('song.mp3.mp3'):
+        os.remove('song.mp3.mp3')
+    fut = play_next_song(ctx)
+    loop = asyncio.get_event_loop()  # Získání event loop
+    fut = asyncio.run_coroutine_threadsafe(fut, loop)  # Vykonání coroutine
+    try:
+        fut.result()
+    except Exception as e:
+        print(f'Chyba při spuštění další skladby: {e}')
+
+
+@bot.command()
+async def stop(ctx):
+    voice_client = ctx.voice_client
+    if voice_client and voice_client.is_playing():
+        voice_client.stop()
+        await ctx.send("Hudba byla zastavena. Můžete ji znovu spustit pomocí `.resume`.")
+    else:
+        await ctx.send("Momentálně žádná hudba nehraje.")
+
+
+@bot.command()
+async def resume(ctx):
+    global current_song  # Declare as global to use the variable
+
+    voice_client = ctx.voice_client
+    if voice_client and not voice_client.is_playing() and current_song:
+        # Play the currently saved song if it's paused
+        voice_client.play(discord.FFmpegPCMAudio('song.mp3', executable=FFMPEG_PATH), after=lambda e: on_song_end(ctx))
+        await ctx.send("Hudba byla obnovena.")
+    else:
+        await ctx.send("Hudba již hraje nebo nebyla žádná skladba přehrána.")
+
+
+@bot.command()
+async def skip(ctx):
+    voice_client = ctx.voice_client
+    if voice_client and voice_client.is_playing():
+        voice_client.stop()  # Zastav aktuální skladbu
+        await ctx.send("Přehrávání aktuální skladby bylo přeskočeno.")
+        await play_next_song(ctx)
+    else:
+        await ctx.send("Momentálně žádná hudba nehraje.")
+
+
+@bot.command()
+async def next(ctx, url: str = None):
+    if url is None:
+        await ctx.send("Použijte příkaz `.next <YouTube URL>` pro přidání skladby do fronty.")
+        return
+
+    # Přidání URL do fronty
+    song_queue.append(url)
+    await ctx.send(f"URL {url} byla přidána do fronty.")
+
+    # Pokud nic nehraje, přehraj skladbu hned
+    if not ctx.voice_client.is_playing():
+        await play_next_song(ctx)
+
+
+@bot.command()
+async def leave(ctx):
+    voice_client = ctx.voice_client
+    if voice_client:
+        await voice_client.disconnect()
+        await ctx.send("Bot opustil hlasový kanál.")
+    else:
+        await ctx.send("Bot není připojen k žádnému hlasovému kanálu.")
+
 
 @bot.event
 async def on_ready():
@@ -236,5 +352,3 @@ async def on_ready():
 
 
 bot.run(token)
-
-
