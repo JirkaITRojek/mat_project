@@ -6,11 +6,16 @@ from textwrap import fill
 import requests
 import os
 import asyncio
+import random
 
 with open("token.txt") as file:
     token = file.read()
 
+intents = discord.Intents.default()
+intents.message_content = True  # Aby bot mohl číst obsah zpráv
+
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
+last_gif = None
 
 
 @bot.event
@@ -51,6 +56,33 @@ async def load_cogs():
         if filename.endswith(".py"):
             await bot.load_extension(f"cogs.{filename[:-3]}")
             print(f"Načítán cog: {filename}")
+
+
+@bot.command()
+async def madara(ctx):
+    global last_gif  # Používáme globální proměnnou pro uchování posledního GIFu
+    try:
+        with open('gifs.txt', 'r') as file:
+            gifs = file.readlines()
+
+        # Odstraníme případné bílá místa (např. nové řádky)
+        gifs = [gif.strip() for gif in gifs]
+
+        # Vybereme náhodný GIF, který není stejný jako ten předchozí
+        random_gif = random.choice(gifs)
+        while random_gif == last_gif:
+            random_gif = random.choice(gifs)
+
+        # Uložíme aktuální GIF jako poslední
+        last_gif = random_gif
+
+        # Pošleme náhodně vybraný GIF
+        await ctx.send(random_gif)
+
+    except FileNotFoundError:
+        await ctx.send("Soubor gifs.txt nebyl nalezen!")
+    except Exception as e:
+        await ctx.send(f"Došlo k chybě: {e}")
 
 
 @bot.command()
