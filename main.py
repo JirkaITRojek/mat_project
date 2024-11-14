@@ -181,31 +181,6 @@ async def ilikewomen(ctx):
     gif_url = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXg1OGI3azA1emYwZ2ZkcHdoYnAzMTh3eWtjNmJ4Z3B4cHk4cGc1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/I6n8YSKRIJqPwGll4n/giphy.gif"  # Zde vložte odkaz na váš GIF
     await ctx.send(gif_url)
 
-
-@bot.command()
-async def quote(ctx):
-    try:
-        # API endpoint pro náhodný citát
-        response = requests.get("https://zenquotes.io/api/random")
-
-        # Zkontroluj, zda je odpověď úspěšná (status kód 200)
-        if response.status_code == 200:
-            data = response.json()
-            # Extrahuj citát a autora z odpovědi API
-            quote = data[0]['q']
-            author = data[0]['a']
-
-            # Odešli citát do Discordu
-            await ctx.send(f'"{quote}" – {author}')
-        else:
-            # Pokud API neodpoví úspěšně, odešli chybovou zprávu
-            await ctx.send("Nemohu získat citát, zkuste to prosím později.")
-    except Exception as e:
-        # Zachytí chybu a odešle ji do Discordu
-        await ctx.send(f"Došlo k chybě: {str(e)}")
-
-
-
 @bot.event
 async def on_ready():
     print("Slime is here! Probably?")
