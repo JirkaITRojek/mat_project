@@ -16,115 +16,43 @@ intents.message_content = True  # Aby bot mohl číst obsah zpráv
 
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
-
-@bot.event
-async def on_message(message):
-    if message.content == ".":
-        commands_list = """
-        Dostupné příkazy:
-        - `.ping`: Zobrazí "Pong!"
-        - `.pong`: Zobrazí "Ping!"
-        - `.style <font> <text>`: Vytvoří obrázek s daným fontem a textem.
-        - `.meme`: Načte a zobrazí náhodný meme z Redditu (r/memes).    
-        - `.wakeup <uživatel>`: Pošle soukromou zprávu uživateli.
-        - `.je <uživatel>`: Odpoví vtipně na zmíněného uživatele.
-        - `.hello`: Pozdraví tě.
-        - `.gay`: Vtipná odpověď.
-        - `.ilikewomen`: Odesílá GIF.
-        - `.quote`: Získá náhodný citát z API.
-        - `.play <YouTube URL>`: Přehrává zvuk z YouTube videa.
-        - `.next <YouTube URL>`: Přidá skladbu do fronty.
-        - `.skip`: Přeskočí aktuálně hranou skladbu.
-        - `.stop`: Zastaví aktuální skladbu.
-        - `.resume`: Obnoví zastavenou skladbu.
-        - `.leave`: Opuštění hlasového kanálu.
-        """
-        await message.channel.send(commands_list)
-    await bot.process_commands(message)
-
-
-available_fonts = {
-    "brit": "./fonts/ANTIGB__.TTF",
-    "nemec": "./fonts/ANTIGRG_.TTF",
-    "krysa": "./fonts/rattfinny.ttf",
-    # Přidej další fonty podle potřeby
-}
-
+# Načtení CogManager
 async def load_cogs():
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             await bot.load_extension(f"cogs.{filename[:-3]}")
             print(f"Načítán cog: {filename}")
 
-@bot.command()
-async def style(ctx, font: str = None, *, text: str = None):
-    if font is None or text is None:
-        await ctx.send(
-            "Použití příkazu: `.style <font> <text>`. Dostupné fonty jsou: " + ", ".join(available_fonts.keys()))
-        return
 
-    try:
-        # Zkontroluj, zda uživatel zvolil dostupný font
-        if font.lower() not in available_fonts:
-            await ctx.send("Není dostupný tento font. Použij některý z těchto: " + ", ".join(available_fonts.keys()))
-            return
-
-        # Načti font na základě výběru uživatele
-        font_path = available_fonts[font.lower()]
-
-        # Zalamování textu na více řádků (pokud je dlouhý)
-        wrapped_text = fill(text, width=20)
-
-        # Vytvoření základního obrázku (bílý pozadí)
-        img = Image.new('RGB', (500, 300), color=(255, 255, 255))
-        d = ImageDraw.Draw(img)
-
-        # Načti vybraný font
-        meme_font = ImageFont.truetype(font_path, size=30)
-
-        # Rozděl zalomený text na jednotlivé řádky
-        lines = wrapped_text.split('\n')
-
-        # Výpočet celkové výšky textu
-        total_text_height = sum([d.textbbox((0, 0), line, font=meme_font)[3] for line in lines])
-
-        # Začátek Y (vertikální zarovnání na střed)
-        current_y = (img.height - total_text_height) // 2
-
-        # Pro každý řádek textu: zarovnat na střed a vykreslit
-        for line in lines:
-            text_bbox = d.textbbox((0, 0), line, font=meme_font)
-            text_width = text_bbox[2] - text_bbox[0]
-
-            # Vypočítat x souřadnici pro zarovnání na střed
-            text_x = (img.width - text_width) // 2
-
-            # Přidání obrysu textu
-            d.text((text_x - 1, current_y - 1), line, font=meme_font, fill=(0, 0, 0))
-            d.text((text_x + 1, current_y - 1), line, font=meme_font, fill=(0, 0, 0))
-            d.text((text_x - 1, current_y + 1), line, font=meme_font, fill=(0, 0, 0))
-            d.text((text_x + 1, current_y + 1), line, font=meme_font, fill=(0, 0, 0))
-
-            # Vložení hlavního bílého textu
-            d.text((text_x, current_y), line, font=meme_font, fill=(255, 255, 255))
-
-            # Posun y souřadnice dolů pro další řádek
-            current_y += text_bbox[3] - text_bbox[1]
-
-        # Uložení obrázku do paměti
-        with BytesIO() as image_binary:
-            img.save(image_binary, 'PNG')
-            image_binary.seek(0)
-            await ctx.send(file=discord.File(fp=image_binary, filename='meme.png'))
-
-    except Exception as e:
-        await ctx.send(f"Došlo k chybě při generování obrázek: {str(e)}")
-
+@bot.event
+async def on_message(message):
+    if message.content == ".":
+        commands_list = """
+        Dostupné příkazy:
+        - .ping: Zobrazí "Pong!"
+        - .pong: Zobrazí "Ping!"
+        - .style <font> <text>: Vytvoří obrázek s daným fontem a textem.
+        - .meme: Načte a zobrazí náhodný meme z Redditu (r/memes).    
+        - .wakeup <uživatel>: Pošle soukromou zprávu uživateli.
+        - .je <uživatel>: Odpoví vtipně na zmíněného uživatele.
+        - .hello: Pozdraví tě.
+        - .gay: Vtipná odpověď.
+        - .ilikewomen: Odesílá GIF.
+        - .quote: Získá náhodný citát z API.
+        - .play <YouTube URL>: Přehrává zvuk z YouTube videa.
+        - .next <YouTube URL>: Přidá skladbu do fronty.
+        - .skip: Přeskočí aktuálně hranou skladbu.
+        - .stop: Zastaví aktuální skladbu.
+        - .resume: Obnoví zastavenou skladbu.
+        - .leave: Opuštění hlasového kanálu.
+        """
+        await message.channel.send(commands_list)
+    await bot.process_commands(message)
 
 @bot.command()
 async def wakeup(ctx, member: discord.Member = None):
     if member is None:
-        await ctx.send("Použití příkazu: `.wakeup @<uživatel>` - Pošle 10 zpráv uživateli do DM.")
+        await ctx.send("Použití příkazu: .wakeup @<uživatel> - Pošle 10 zpráv uživateli do DM.")
         return
 
     try:
@@ -146,16 +74,14 @@ async def wakeup(ctx, member: discord.Member = None):
         # Pokud bot nemůže odeslat zprávu, například pokud má uživatel zakázané DM
         await ctx.send(f"Nemohu odeslat zprávu uživateli {member.display_name}. Možná má zakázané přímé zprávy.")
 
-
 @bot.command()
 async def ping(ctx):
     await ctx.send("Pong!")
 
-
 @bot.command()
 async def je(ctx, member: discord.Member = None):
     if member is None:
-        await ctx.send("Použití příkazu: `.je @<uživatel>` - Odpoví vtipně na zmíněného uživatele.")
+        await ctx.send("Použití příkazu: .je @<uživatel> - Odpoví vtipně na zmíněného uživatele.")
         return
 
     await ctx.send(f'Tvůj názor nás nezajímá {member.mention}!')
@@ -168,27 +94,21 @@ async def je(ctx, member: discord.Member = None):
     except Exception as e:
         await ctx.send(f"Nepodařilo se odeslat obrázek: {str(e)}")
 
-
 @bot.command()
 async def hello(ctx):
     await ctx.send(f'Ahoj, {ctx.author}!')
-
 
 @bot.command()
 async def gay(ctx):
     await ctx.send(f'Je , {ctx.author}!')
 
-
-
-
 @bot.event
 async def on_ready():
     print("Slime is here! Probably?")
 
-
 async def main():
     async with bot:
-        await load_cogs()
+        await load_cogs()  # Načtení všech cogů
         await bot.start(token)
 
 # Spuštění hlavní funkce
