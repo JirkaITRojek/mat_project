@@ -12,11 +12,18 @@ available_fonts = {
 }
 
 class Write(commands.Cog):
+    """
+    Cog pro generování obrázků s textem v různých stylech fontů.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(help="Vytvoří obrázek s textem ve zvoleném fontu.")
     async def style(self, ctx, font: str = None, *, text: str = None):
+        """
+        Vytvoří obrázek s textem na základě zvoleného fontu a textu.
+        """
         if font is None or text is None:
             await ctx.send(
                 "Použití příkazu: `.style <font> <text>`. Dostupné fonty jsou: " + ", ".join(available_fonts.keys()))
@@ -77,7 +84,7 @@ class Write(commands.Cog):
                 await ctx.send(file=discord.File(fp=image_binary, filename='meme.png'))
 
         except Exception as e:
-            await ctx.send(f"Došlo k chybě při generování obrázek: {str(e)}")
+            await ctx.send(f"Došlo k chybě při generování obrázku: {str(e)}")
 
 
 async def setup(bot):

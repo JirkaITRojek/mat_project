@@ -8,7 +8,7 @@ class MadaraCog(commands.Cog):
         self.bot = bot
         self.last_gif = None  # Uchování posledního GIFu
 
-    @commands.command()
+    @commands.command(help="Pošle náhodný GIF z gifs.txt, který není stejný jako poslední.")
     async def madara(self, ctx):
         try:
             with open('gifs.txt', 'r') as file:
@@ -33,7 +33,7 @@ class MadaraCog(commands.Cog):
         except Exception as e:
             await ctx.send(f"Došlo k chybě: {e}")
 
-    @commands.command()
+    @commands.command(help="Pošle GIF, který reprezentuje 'I like women'.")
     async def ilikewomen(self, ctx):
         gif_url = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXg1OGI3azA1emYwZ2ZkcHdoYnAzMTh3eWtjNmJ4Z3B4cHk4cGc1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/I6n8YSKRIJqPwGll4n/giphy.gif"  # Zde vložte odkaz na váš GIF
         await ctx.send(gif_url)

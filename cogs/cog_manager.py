@@ -17,8 +17,7 @@ class CogManager(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def load_cog(self, ctx, cog_name: str):
         """
-        Načte specifický cog podle názvu.
-        Použití: .load_cog <název_cogu>
+        Načte specifický cog podle názvu. Použití: .load_cog <název_cogu>
         """
         try:
             await self.bot.load_extension(f"cogs.{cog_name}")
@@ -34,8 +33,7 @@ class CogManager(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def unload_cog(self, ctx, cog_name: str):
         """
-        Vypne specifický cog podle názvu.
-        Použití: .unload_cog <název_cogu>
+        Vypne specifický cog podle názvu. Použití: .unload_cog <název_cogu>
         """
         try:
             await self.bot.unload_extension(f"cogs.{cog_name}")
@@ -51,8 +49,7 @@ class CogManager(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def reload_cog(self, ctx, cog_name: str):
         """
-        Znovu načte specifický cog podle názvu.
-        Použití: .reload_cog <název_cogu>
+        Znovu načte specifický cog podle názvu. Použití: .reload_cog <název_cogu>
         """
         try:
             await self.bot.reload_extension(f"cogs.{cog_name}")

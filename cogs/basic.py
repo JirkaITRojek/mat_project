@@ -3,27 +3,27 @@ from discord.ext import commands
 
 class BasicCommands(commands.Cog):
     """
-    Cog pro základní příkazy (ping, hello, pong).
+     Cog pro základní příkazy (ping, hello, pong).
     """
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(help="Odpoví na příkaz .ping s 'Pong!'")
     async def ping(self, ctx):
         """
         Odpoví na příkaz .ping s "Pong!".
         """
         await ctx.send("Pong!")
 
-    @commands.command()
+    @commands.command(help="Odpoví na příkaz .pong s 'Ping!'")
     async def pong(self, ctx):
         """
         Odpoví na příkaz .pong s "Ping!".
         """
         await ctx.send("Ping!")
 
-    @commands.command()
+    @commands.command(help="Odpoví na příkaz .hello s pozdravem.")
     async def hello(self, ctx):
         """
         Odpoví na příkaz .hello s pozdravem.

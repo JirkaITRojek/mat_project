@@ -3,11 +3,18 @@ from discord.ext import commands
 import requests
 
 class Quote(commands.Cog):
+    """
+    Cog pro získávání náhodných citátů.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(help="Zobrazí náhodný citát z API.")
     async def quote(self, ctx):
+        """
+        Získá a zobrazí náhodný citát s autorem.
+        """
         try:
             # API endpoint pro náhodný citát
             response = requests.get("https://zenquotes.io/api/random")

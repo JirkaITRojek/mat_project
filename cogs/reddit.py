@@ -23,12 +23,11 @@ class Reddit(commands.Cog):
 
         self.used_posts = set()  # Sada pro uchování již zobrazených meme
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"{__name__} is ready")
-
     @commands.command()
     async def meme(self, ctx: commands.Context, subreddit: str = "memes"):
+        """
+        Zobrazí náhodný meme obrázek z vybraného subredditu. Použití: !meme [subreddit]
+        """
         # Připojíme se k subredditu
         subreddit = await self.reddit.subreddit(subreddit)
         post_list = []

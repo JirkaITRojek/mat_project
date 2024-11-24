@@ -1,12 +1,7 @@
 import discord
 from discord.ext import commands
-from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
-from textwrap import fill
-import requests
 import os
 import asyncio
-import random
 
 with open("token.txt") as file:
     token = file.read()
@@ -23,29 +18,21 @@ async def load_cogs():
             await bot.load_extension(f"cogs.{filename[:-3]}")
             print(f"Načítán cog: {filename}")
 
-
 @bot.event
 async def on_message(message):
     if message.content == ".":
+        # Seznam všech příkazů načtených z cogs a základních příkazů
         commands_list = """
         Dostupné příkazy:
-        - .ping: Zobrazí "Pong!"
-        - .pong: Zobrazí "Ping!"
-        - .style <font> <text>: Vytvoří obrázek s daným fontem a textem.
-        - .meme: Načte a zobrazí náhodný meme z Redditu (r/memes).    
-        - .wakeup <uživatel>: Pošle soukromou zprávu uživateli.
-        - .je <uživatel>: Odpoví vtipně na zmíněného uživatele.
-        - .hello: Pozdraví tě.
-        - .gay: Vtipná odpověď.
-        - .ilikewomen: Odesílá GIF.
-        - .quote: Získá náhodný citát z API.
-        - .play <YouTube URL>: Přehrává zvuk z YouTube videa.
-        - .next <YouTube URL>: Přidá skladbu do fronty.
-        - .skip: Přeskočí aktuálně hranou skladbu.
-        - .stop: Zastaví aktuální skladbu.
-        - .resume: Obnoví zastavenou skladbu.
-        - .leave: Opuštění hlasového kanálu.
         """
+
+        # Seřazení příkazů abecedně
+        sorted_commands = sorted(bot.commands, key=lambda c: c.name.lower())
+
+        # Dynamické načítání příkazů
+        for command in sorted_commands:
+            commands_list += f"- {command}: {command.help}\n"
+
         await message.channel.send(commands_list)
     await bot.process_commands(message)
 
@@ -55,7 +42,7 @@ async def on_ready():
 
 async def main():
     async with bot:
-        await load_cogs()  # Načtení všech cogů
+        await load_cogs()  # Načtení všech cogs
         await bot.start(token)
 
 # Spuštění hlavní funkce

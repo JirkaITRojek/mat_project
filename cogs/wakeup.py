@@ -12,8 +12,7 @@ class Wakeup(commands.Cog):
     @commands.command()
     async def wakeup(self, ctx, member: discord.Member = None):
         """
-        Pošle 10 zpráv uživateli do DM.
-        Použití: .wakeup @<uživatel>
+        Pošle 10 zpráv uživateli do DM. Použití: .wakeup @<uživatel>
         """
         if member is None:
             await ctx.send("Použití příkazu: .wakeup @<uživatel> - Pošle 10 zpráv uživateli do DM.")
