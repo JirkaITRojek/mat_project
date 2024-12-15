@@ -2,23 +2,17 @@ import discord
 from discord.ext import commands
 from random import choice
 import asyncpraw as praw
-from settings import DEFAULT_SUBREDDIT, DEFAULT_SORT, VALID_SORTS
+from settings import DEFAULT_SUBREDDIT, DEFAULT_SORT, VALID_SORTS, REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET
 
 
 class Reddit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        # Načti client_id a client_secret ze souborů
-        with open("client_id.txt", "r") as f:
-            client_id = f.read().strip()
-        with open("client_secret.txt", "r") as f:
-            client_secret = f.read().strip()
-
-        # Inicializuj Reddit API klienta
+        # Inicializuj Reddit API klienta s údaji ze settings.py
         self.reddit = praw.Reddit(
-            client_id=client_id,
-            client_secret=client_secret,
+            client_id=REDDIT_CLIENT_ID,
+            client_secret=REDDIT_CLIENT_SECRET,
             user_agent="script:randommeme:v1.0 (by u/Agitated_Arachnid891)"
         )
 

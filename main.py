@@ -2,9 +2,7 @@ import discord
 from discord.ext import commands
 import os
 import asyncio
-
-with open("token.txt") as file:
-    token = file.read()
+from settings import BOT_TOKEN  # Import tokenu ze settings.py
 
 intents = discord.Intents.default()
 intents.message_content = True  # Aby bot mohl číst obsah zpráv
@@ -43,8 +41,7 @@ async def on_ready():
 async def main():
     async with bot:
         await load_cogs()  # Načtení všech cogs
-        await bot.start(token)
+        await bot.start(BOT_TOKEN)  # Použití tokenu ze settings.py
 
 # Spuštění hlavní funkce
-import asyncio
 asyncio.run(main())
