@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from random import choice
 import asyncpraw as praw
+from settings import DEFAULT_SUBREDDIT, DEFAULT_SORT, VALID_SORTS
 
 
 class Reddit(commands.Cog):
@@ -24,31 +25,62 @@ class Reddit(commands.Cog):
         self.used_posts = set()  # Sada pro uchování již zobrazených meme
 
     @commands.command()
-    async def meme(self, ctx: commands.Context, subreddit: str = "memes"):
+    async def meme(self, ctx: commands.Context, subreddit: str = None, sort_type: str = None):
         """
-        Zobrazí náhodný meme obrázek z vybraného subredditu. Použití: !meme [subreddit]
+        Zobrazí náhodný meme obrázek z vybraného subredditu a typu řazení.
+        Použití: !meme [subreddit] [sort_type]
+        - subreddit: Vybraný subreddit (výchozí: nastavený v settings.py)
+        - sort_type: Typ řazení (hot, new, top, rising, controversial; výchozí: nastavený v settings.py)
         """
+
+        # Použij výchozí hodnoty, pokud nejsou zadány argumenty
+        subreddit = subreddit or DEFAULT_SUBREDDIT
+        sort_type = sort_type or DEFAULT_SORT
+
+        # Ověření platnosti typu řazení
+        if sort_type not in VALID_SORTS:
+            await ctx.send(f"Invalid sort type '{sort_type}'. Valid options are: {', '.join(VALID_SORTS)}.")
+            return
+
         # Připojíme se k subredditu
-        subreddit = await self.reddit.subreddit(subreddit)
+        subreddit_obj = await self.reddit.subreddit(subreddit)
         post_list = []
 
-        # Procházej příspěvky v hot (nejlepší příspěvky)
-        async for post in subreddit.hot(limit=30):
-            if not post.over_18 and post.author is not None and any(
-                    post.url.endswith(ext) for ext in [".png", ".jpeg", "jpg", ".gif"]):
-                if post.id not in self.used_posts:  # Zajistíme, že příspěvek ještě nebyl použit
-                    author_name = post.author.name
-                    post_list.append((post.id, post.url, author_name))
-                if post.author is None:
-                    if post.id not in self.used_posts:
-                        post_list.append((post.id, post.url, "N/A"))
+        # Vyber příspěvky podle zvoleného typu řazení
+        if sort_type == "hot":
+            async for post in subreddit_obj.hot(limit=30):
+                post_list.append(post)
+        elif sort_type == "new":
+            async for post in subreddit_obj.new(limit=30):
+                post_list.append(post)
+        elif sort_type == "top":
+            async for post in subreddit_obj.top(limit=30):
+                post_list.append(post)
+        elif sort_type == "rising":
+            async for post in subreddit_obj.rising(limit=30):
+                post_list.append(post)
+        elif sort_type == "controversial":
+            async for post in subreddit_obj.controversial(limit=30):
+                post_list.append(post)
 
-        if post_list:
+        # Filtruj vhodné příspěvky
+        valid_posts = [
+            (post.id, post.url, post.author.name if post.author else "N/A")
+            for post in post_list
+            if not post.over_18 and any(post.url.endswith(ext) for ext in [".png", ".jpeg", ".jpg", ".gif", ".webp",
+                                                                           ".gifv", ".bmp", ".tiff", ".tif"])
+            and post.id not in self.used_posts
+        ]
+
+        if valid_posts:
             # Vybereme náhodný příspěvek
-            random_post = choice(post_list)
+            random_post = choice(valid_posts)
 
-            meme_embed = discord.Embed(title="Random meme", description=f"Fetches random meme from r/{subreddit}",
-                                       color=discord.Color.random())
+            meme_embed = discord.Embed(
+                title="Random meme",
+                description=f"Fetches random meme from r/{subreddit} sorted by {sort_type}.",
+                color=discord.Color.random()
+            )
             meme_embed.set_author(name=f"Meme requested by {ctx.author.name}", icon_url=ctx.author.avatar)
             meme_embed.set_image(url=random_post[1])
             meme_embed.set_footer(text=f"Post created by {random_post[2]}.", icon_url=None)

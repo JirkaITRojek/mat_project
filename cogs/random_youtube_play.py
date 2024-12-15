@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 import yt_dlp as youtube_dl
 import random
 import asyncio
@@ -40,9 +40,15 @@ class MusicPlayer(commands.Cog):
 
     @commands.command(name='randomplay', help='Začne přehrávat náhodné písničky.')
     async def randomplay(self, ctx):
+        # Automatické připojení, pokud bot není připojen
         if ctx.voice_client is None:
-            await ctx.send("Bot není připojen na voice kanálu. Použij příkaz `!join`.")
-            return
+            if not ctx.author.voice:
+                await ctx.send("Musíš být připojený na voice kanálu, aby se k tobě bot mohl připojit.")
+                return
+
+            # Připojení k voice kanálu autora
+            channel = ctx.author.voice.channel
+            await channel.connect()
 
         self.voice_channel = ctx.voice_client
         await self.play_next_song(ctx)
@@ -63,7 +69,8 @@ class MusicPlayer(commands.Cog):
             return
 
         # Přehrávání písničky
-        self.voice_channel.play(discord.FFmpegPCMAudio(song_url, executable=FFMPEG_PATH), after=lambda e: self.after_song(ctx, e))
+        source = discord.FFmpegPCMAudio(song_url, executable=FFMPEG_PATH)
+        self.voice_channel.play(source, after=lambda e: self.after_song(ctx, e))
         await ctx.send(f"Přehrávám náhodnou písničku na téma: {keyword}.")
 
     async def search_youtube(self, keyword):
@@ -80,7 +87,8 @@ class MusicPlayer(commands.Cog):
     def after_song(self, ctx, error):
         # Po dokončení přehrávání písničky zkontrolujeme, zda máme další písničku v seznamu
         self.is_playing = False
-        asyncio.run_coroutine_threadsafe(self.play_next_song(ctx), self.bot.loop)
+        # Asynchronní volání pro přehrání další písničky
+        self.bot.loop.create_task(self.play_next_song(ctx))
 
     @commands.command(name='list_keywords', help='Zobrazí seznam klíčových slov pro náhodné písničky.')
     async def list_keywords(self, ctx):
@@ -94,6 +102,15 @@ class MusicPlayer(commands.Cog):
     async def add_keyword(self, ctx, *, keyword: str):
         self.keywords.append(keyword)
         await ctx.send(f"Klíčové slovo '{keyword}' bylo přidáno.")
+
+    @commands.command(name='stop_random', help='Zastaví přehrávání náhodných písniček.')
+    async def stop_random(self, ctx):
+        if ctx.voice_client is not None:
+            ctx.voice_client.stop()  # Zastavení přehrávání
+            self.is_playing = False
+            await ctx.send("Přehrávání bylo zastaveno.")
+        else:
+            await ctx.send("Bot není připojen na žádném voice kanálu nebo není aktivní přehrávání.")
 
 async def setup(bot):
     await bot.add_cog(MusicPlayer(bot))
