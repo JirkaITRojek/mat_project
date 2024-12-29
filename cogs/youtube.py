@@ -3,9 +3,8 @@ from discord.ext import commands
 import os
 import yt_dlp as youtube_dl
 import asyncio
+from settings import FFMPEG_PATH
 
-# Define the path to ffmpeg and initialize the queue and current song variable
-FFMPEG_PATH = 'C:/ffmpeg/bin/ffmpeg.exe'
 song_queue = []
 current_song = None
 

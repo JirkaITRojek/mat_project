@@ -5,7 +5,7 @@ import random
 import asyncio
 
 # Cesta k FFmpeg
-FFMPEG_PATH = 'C:/ffmpeg/bin/ffmpeg.exe'
+from settings import FFMPEG_PATH, KEYWORDS
 
 class MusicPlayer(commands.Cog):
     def __init__(self, bot):
@@ -14,9 +14,8 @@ class MusicPlayer(commands.Cog):
         self.voice_channel = None
         self.song_queue = []  # Seznam písní, které budou přehrávány
 
-        self.keywords = [  # Seznam náhodných klíčových slov pro vyhledání písniček
-            "pop music", "rock hits", "top charts", "hip hop music", "indie songs", "jazz music", "sad songs"
-        ]
+        # Použijeme klíčová slova ze settings
+        self.keywords = KEYWORDS
 
     @commands.command(name='join', help='Bot se připojí na voice kanál.')
     async def join(self, ctx):
