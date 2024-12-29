@@ -10,7 +10,7 @@ class ImageSender(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.image_folder = "images"  # Cesta ke složce s obrázky
+        self.image_folder = "./image"  # Cesta ke složce s obrázky
 
     @commands.command(name="image", help="Pošle obrázek ze složky. Zadejte číslo obrázku nebo nechte náhodně vybrat.")
     async def send_image(self, ctx, image_number: int = None):

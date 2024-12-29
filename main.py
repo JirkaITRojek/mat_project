@@ -16,6 +16,7 @@ async def load_cogs():
             await bot.load_extension(f"cogs.{filename[:-3]}")
             print(f"Načítán cog: {filename}")
 
+
 @bot.event
 async def on_message(message):
     if message.content == ".":
@@ -24,14 +25,34 @@ async def on_message(message):
         Dostupné příkazy:
         """
 
-        # Seřazení příkazů abecedně
-        sorted_commands = sorted(bot.commands, key=lambda c: c.name.lower())
+        # Příprava na rozdělení příkazů podle kogn
+        cogs_commands = {}
 
-        # Dynamické načítání příkazů
-        for command in sorted_commands:
-            commands_list += f"- {command}: {command.help}\n"
+        for command in bot.commands:
+            cog_name = command.cog_name if command.cog_name else "Základní příkazy"
 
+            # Pokud kogn neexistuje, vytvoříme nový seznam pro příkazy
+            if cog_name not in cogs_commands:
+                cogs_commands[cog_name] = []
+
+            cogs_commands[cog_name].append(command)
+
+        # Seřazení příkazů abecedně v každém kog
+        for cog_name, commands in cogs_commands.items():
+            # Seřadíme příkazy podle názvu
+            sorted_commands = sorted(commands, key=lambda c: c.name.lower())
+
+            # Přidáme název kognu
+            commands_list += f"\n**{cog_name}**:\n"
+
+            # Dynamické načítání příkazů
+            for command in sorted_commands:
+                commands_list += f"- {command.name}: {command.help}\n"
+
+        # Poslání zprávy
         await message.channel.send(commands_list)
+
+    # Pokračujeme v zpracování dalších příkazů
     await bot.process_commands(message)
 
 @bot.event

@@ -22,7 +22,7 @@ class Reddit(commands.Cog):
     async def meme(self, ctx: commands.Context, subreddit: str = None, sort_type: str = None):
         """
         Zobrazí náhodný meme obrázek z vybraného subredditu a typu řazení.
-        Použití: !meme [subreddit] [sort_type]
+           Použití: !meme [subreddit] [sort_type]
         - subreddit: Vybraný subreddit (výchozí: nastavený v settings.py)
         - sort_type: Typ řazení (hot, new, top, rising, controversial; výchozí: nastavený v settings.py)
         """
