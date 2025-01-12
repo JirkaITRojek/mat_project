@@ -1,0 +1,983 @@
+% ŠABLONA PRO PSANÍ ZÁVĚREČNÉ STUDIJNÍ PRÁCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Autor: Jakub Dokulil (kubadokulil99@gmail.com)
+% Tato šablona byla vytvořena tak, aby pomocí ní mohli v systému LaTeX soutěžící sázet své práce a zároveň odpovídala požadavkům na formátování vyplývajícím z wordové šablony umístěné na webu soc.cz.
+%
+\documentclass[12pt, a4paper]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{float} % Přidat do preambule
+
+%% Nutné balíčky a nastavení
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Proměnné
+\newcommand\obor{INFORMAČNÍ TECHNOLOGIE} %% -- napiš číslo a název tvého oboru
+\newcommand\kodOboru{18-20-M/01} %% -- napiš číslo a název tvého oboru
+\newcommand\zamereni{se zaměřením na počítačové sítě a programování} %% -- napiš číslo a název tvého oboru
+\newcommand\skola{Střední škola průmyslová a umělecká, Opava} %% vyplň název školy
+\newcommand\trida{IT4} %% vyplň jméno svého konzultanta
+\newcommand\jmenoAutora{Jiří Rojek}  %% vyplň své jméno
+\newcommand\skolniRok{2024/25} %% vyplň rok
+\newcommand\datumOdevzdani{31. 12. 2024} %% vyplň rok
+\newcommand\nazevPrace{Discord Bot - Multifunkční bot pro správu Discord serveru} %% vyplň název své práce
+
+\title{\nazevPrace} %% -- Název tvé práce
+\author{\jmenoAutora} %% -- tvé jméno
+\date{\datumOdevzdani} %% -- rok, kdy píšeš SOČku
+
+\usepackage[top=2.5cm, bottom=2.5cm, left=3.5cm, right=1.5cm]{geometry} %% nastaví okraje, left -- vnitřní okraj, right -- vnější okraj
+
+\usepackage[czech]{babel} %% balík babel pro sazbu v češtině
+\usepackage[utf8]{inputenc} %% balíky pro kódování textu
+\usepackage[T1]{fontenc}
+\usepackage{cmap} %% balíček zajišťující, že vytvořené PDF bude prohledávatelné a kopírovatelné
+\usepackage{lmodern}  % Přidáno pro lepší podporu českých znaků
+
+\usepackage{graphicx} %% balík pro vkládání obrázků
+
+\usepackage{subcaption} %% balíček pro vkládání podobrázků
+
+\usepackage{hyperref} %% balíček, který v PDF vytváří odkazy
+
+\linespread{1.25} %% řádkování
+\setlength{\parskip}{0.5em} %% odsazení mezi odstavci
+
+
+\usepackage[pagestyles]{titlesec} %% balíček pro úpravu stylu kapitol a sekcí
+
+% Nastavení formátování nadpisů
+\titleformat{\chapter}[hang]
+  {\rmfamily\bfseries\Large}  % Zmenšeno z \LARGE na \Large
+  {\thechapter}
+  {1em}
+  {\MakeUppercase}
+
+\titleformat{\section}[hang]
+  {\rmfamily\bfseries\large}  % Zmenšeno z \Large na \large
+  {\thesection}
+  {1em}
+  {}
+
+\titleformat{\subsection}[hang]
+  {\rmfamily\bfseries\normalsize}  % Zmenšeno z \large na \normalsize
+  {\thesubsection}
+  {1em}
+  {}
+
+% Nastavení mezer před a za nadpisy
+\titlespacing*{\chapter}{0pt}{-30pt}{8pt}  % Zmenšeno z 20pt na 8pt
+\titlespacing*{\section}{0pt}{12pt}{4pt}   % Zmenšeno z 20pt/10pt na 12pt/4pt
+\titlespacing*{\subsection}{0pt}{12pt}{4pt} % Zmenšeno z 20pt/10pt na 12pt/4pt
+
+% Nastavení formátování pro nečíslované nadpisy
+\titleformat{name=\chapter,numberless}[hang]
+  {\rmfamily\bfseries\Large}
+  {}
+  {0pt}
+  {\MakeUppercase}
+
+\titleformat{name=\section,numberless}[hang]
+  {\rmfamily\bfseries\large}  % Zmenšeno z \Large na \large
+  {}
+  {0pt}
+  {}
+
+% Nastavení mezer pro nečíslované nadpisy
+\titlespacing*{name=\chapter,numberless}{0pt}{0pt}{8pt}  % Změněno z -30pt na 0pt pro první mezeru
+\titlespacing*{name=\section,numberless}{0pt}{12pt}{4pt}   % Zmenšeno z 15pt/5pt na 12pt/4pt
+
+% Nastavení fontu pro obsah
+\renewcommand{\cfttoctitlefont}{\rmfamily\LARGE\bfseries}
+\renewcommand{\cftchapfont}{\rmfamily\bfseries}
+\renewcommand{\cftsecfont}{\rmfamily}
+\renewcommand{\cftsubsecfont}{\rmfamily}
+
+% Nastavení číslování pro obsah
+\renewcommand{\cftchappresnum}{\rmfamily\bfseries}
+\renewcommand{\cftsecpresnum}{\rmfamily}
+\renewcommand{\cftsubsecpresnum}{\rmfamily}
+
+\usepackage{tocloft} % Balíček pro přizpůsobení vzhledu obsahu
+\setlength{\cftbeforechapskip}{10pt}  % Větší rozestup pro kapitoly
+\setlength{\cftbeforesecskip}{3pt}   % Menší rozestup pro sekce
+
+% Nastavení odsazení a formátování obsahu
+\cftsetindents{chapter}{0em}{2.5em}
+\cftsetindents{section}{2.5em}{3em}
+\cftsetindents{subsection}{5.5em}{3.7em}
+\renewcommand{\cftdotsep}{2} % Hustota teček
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % Tečky i pro kapitoly
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.025pt}
+
+\usepackage{booktabs}
+
+\usepackage{url}
+
+%% Balíčky co se můžou hodit :) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{pdfpages} %% Balíček umožňující vkládat stránky z PDF souborů, 
+
+\usepackage{upgreek} %% Balíček pro sazbu stojatých řeckých písmen, třeba u jednotky mikrometr. Například stojaté mí: \upmu, stojaté pí: \uppi
+
+\usepackage{amsmath}    %% Balíčky amsmath a amsfonts 
+\usepackage{amsfonts}   %% pro sazbu matematických symbolů
+\usepackage{esint}     %% pro sazbu různých integrálů (např \oiint)
+\usepackage{mathrsfs}
+\usepackage{helvet} % Helvet font
+\usepackage{mathptmx} % Times New Roman
+\usepackage{Oswald} % Oswald font
+
+
+%% makra pro sazbu matematiky
+\newcommand{\dif}{\mathrm{d}} %% makro pro sazbu diferenciálu, místo toho
+%% abych musel psát '\mathrm{d}' mi stačí napsat '\dif' což je mnohem 
+%% kratší a mohu si tak usnadnit práci
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\renewcommand{\lstlistingname}{Kód}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{Seznam programových kódů}% List of Listings -> List of Algorithms
+
+%% Definice 
+\lstdefinelanguage{JavaScript}{
+	morekeywords=[1]{break, continue, delete, else, for, function, if, in,
+		new, return, this, typeof, var, void, while, with},
+	% Literals, primitive types, and reference types.
+	morekeywords=[2]{false, null, true, boolean, number, undefined,
+		Array, Boolean, Date, Math, Number, String, Object},
+	% Built-ins.
+	morekeywords=[3]{eval, parseInt, parseFloat, escape, unescape},
+	sensitive,
+	morecomment=[s]{/*}{*/},
+	morecomment=[l]//,
+	morecomment=[s]{/**}{*/}, % JavaDoc style comments
+	morestring=[b]',
+	morestring=[b]"
+}[keywords, comments, strings]
+
+
+\lstdefinelanguage[ECMAScript2015]{JavaScript}[]{JavaScript}{
+	morekeywords=[1]{await, async, case, catch, class, const, default, do,
+		enum, export, extends, finally, from, implements, import, instanceof,
+		let, static, super, switch, throw, try},
+	morestring=[b]` % Interpolation strings.
+}
+
+\lstalias[]{ES6}[ECMAScript2015]{JavaScript}
+
+% Nastavení barev
+% Requires package: color.
+\definecolor{mediumgray}{rgb}{0.3, 0.4, 0.4}
+\definecolor{mediumblue}{rgb}{0.0, 0.0, 0.8}
+\definecolor{forestgreen}{rgb}{0.13, 0.55, 0.13}
+\definecolor{darkviolet}{rgb}{0.58, 0.0, 0.83}
+\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+\definecolor{crimson}{rgb}{0.86, 0.8, 0.24}
+
+% Nastavení pro Python
+\lstdefinestyle{Python}{
+	language=Python,
+	backgroundcolor=\color{white},
+	basicstyle=\ttfamily,
+	breakatwhitespace=false,
+	breaklines=false,
+	captionpos=b,
+	columns=fullflexible,
+	commentstyle=\color{mediumgray}\upshape,
+	emph={},
+	emphstyle=\color{crimson},
+	extendedchars=true,  % requires inputenc
+	fontadjust=true,
+	frame=single,
+	identifierstyle=\color{black},
+	keepspaces=true,
+	keywordstyle=\color{mediumblue},
+	keywordstyle={[2]\color{darkviolet}},
+	keywordstyle={[3]\color{royalblue}},
+	literate=%
+	{á}{{\'a}}1 {č}{{\v{c}}}1 {ď}{{\v{d}}}1 {é}{{\'e}}1 {ě}{{\v{e}}}1
+	{í}{{\'i}}1 {ň}{{\v{n}}}1 {ó}{{\'o}}1 {ř}{{\v{r}}}1 {š}{{\v{s}}}1
+	{ť}{{\v{t}}}1 {ú}{{\'u}}1 {ů}{{\r{u}}}1 {ý}{{\'y}}1 {ž}{{\v{z}}}1,		
+	numbers=left,
+	numbersep=5pt,
+	numberstyle=\tiny\color{black},
+	rulecolor=\color{black},
+	showlines=true,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stringstyle=\color{forestgreen},
+	tabsize=2,
+	title=\lstname,
+	upquote=true  % requires textcomp	
+}
+
+
+\lstdefinestyle{JSES6Base}{
+	backgroundcolor=\color{white},
+	basicstyle=\ttfamily,
+	breakatwhitespace=false,
+	breaklines=false,
+	captionpos=b,
+	columns=fullflexible,
+	commentstyle=\color{mediumgray}\upshape,
+	emph={},
+	emphstyle=\color{crimson},
+	extendedchars=true,  % requires inputenc
+	fontadjust=true,
+	frame=single,
+	identifierstyle=\color{black},
+	keepspaces=true,
+	keywordstyle=\color{mediumblue},
+	keywordstyle={[2]\color{darkviolet}},
+	keywordstyle={[3]\color{royalblue}},
+ literate=%
+{á}{{\'a}}1 {č}{{\v{c}}}1 {ď}{{\v{d}}}1 {é}{{\'e}}1 {ě}{{\v{e}}}1
+{í}{{\'i}}1 {ň}{{\v{n}}}1 {ó}{{\'o}}1 {ř}{{\v{r}}}1 {š}{{\v{s}}}1
+{ť}{{\v{t}}}1 {ú}{{\'u}}1 {ů}{{\r{u}}}1 {ý}{{\'y}}1 {ž}{{\v{z}}}1,		
+	numbers=left,
+	numbersep=5pt,
+	numberstyle=\tiny\color{black},
+	rulecolor=\color{black},
+	showlines=true,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stringstyle=\color{forestgreen},
+	tabsize=2,
+	title=\lstname,
+	upquote=true  % requires textcomp
+}
+
+\lstdefinestyle{JavaScript}{
+	language=JavaScript,
+	style=JSES6Base,
+}
+\lstdefinestyle{ES6}{
+	language=ES6,
+	style=JSES6Base
+}
+
+
+%% Bordel pro práci - můžeš smáznout :) 
+%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lipsum} %% balíček který píše lipsum (nesmyslný text, který se používá pro kontrolu typografie)
+
+%% Začátek dokumentu
+%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	
+	\pagestyle{empty}
+	\pagenumbering{arabic}
+	
+	\cleardoublepage
+
+%% Titulní stránka s informacemi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	{\fontfamily{phv}\selectfont
+		%% Logo školy
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.6\linewidth]{images/logo-skoly.jpg}
+		\end{figure}
+		
+		
+		%% Hlavička práce a její název (viz proměnná \nazev prace)
+		%% \sffamily %%% bezpatkové písmo - sans serif
+		{\bfseries %%% písmo na stránce je tučně
+			\begin{center}
+				\vspace{0.025 \textheight}
+				\LARGE{ZÁVĚREČNÁ STUDIJNÍ PRÁCE}\\
+				\large{dokumentace}\\
+				\vspace{0.075 \textheight}
+				\LARGE {\nazevPrace}\\
+			\end{center}  
+		}%%%
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.5\linewidth]{images/screenshot-main.png}
+			\label{fig:main-screen}
+		\end{figure}
+		
+		\vspace{0.02 \textheight}
+		\begin{table}[h!]
+			\begin{tabular}{ll}
+				\textbf{Autor:} & \jmenoAutora\\ 
+				\textbf{Obor:} & \kodOboru { } \obor\\
+				\textbf{} & \zamereni\\
+				\textbf{Třída:} & \trida\\
+				\textbf{Školní rok:} & \skolniRok\\
+			\end{tabular}
+			
+		\end{table}		
+	}
+	
+	\clearpage
+
+%% Stránka obsahující poděkování a prohlášení
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Poděkování - nepovinné
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\noindent{\large{\bfseries{Poděkování}\\}}
+	\noindent Děkuji panu učiteli Mgr. Markovi Lucnemu za rady při vytváření tohoto projektu.
+	
+	\vspace*{0.7\textheight} %% Vertikální mezeru je možné upravit
+
+%% Prohlášení - povinné
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\noindent{\large{\bfseries{Prohlášení}\\}}  %% uprav si koncovky podle toho na jaký rod se cítíš, vypadá to pak lépe :) 
+	\noindent{Prohlašuji, že jsem závěrečnou práci vypracoval samostatně a uvedl veškeré použité 
+		informační zdroje.\\}
+	\noindent{Souhlasím, aby tato studijní práce byla použita k výukovým a prezentačním účelům na Střední průmyslové a umělecké škole v Opavě, Praskova 399/8.}
+	\vfill
+	\noindent{V Opavě \datumOdevzdani\\}
+	\noindent
+	\begin{minipage}{\linewidth}
+		\hspace{9.5cm} 
+		\begin{tabular}{@{}p{6cm}@{}}
+			\dotfill \\
+			Podpis autora
+		\end{tabular}
+	\end{minipage}
+	
+	\clearpage
+
+	\tableofcontents
+	\clearpage
+
+%% Stránka obsahující abstrakt (anotaci)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+%% Abstrakt v češtině
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\noindent{\Large{\bfseries{Abstrakt}\\}}
+	Tato práce se zaměřuje na vývoj Discord bota, který poskytuje různé zábavné funkce pro uživatele Discord serveru. Bot je implementován v jazyce Python s využitím knihovny discord.py. Hlavní funkce zahrnují přehrávání YouTube videí, zobrazování Reddit příspěvků, odesílání GIF animací, citátů a obrázků. Důraz je kladen na modularitu kódu a snadnou rozšiřitelnost funkcí.
+
+	\vspace{18pt}
+	\noindent{\large{\bfseries{Klíčová slova}}}
+
+	\noindent Python, Discord API, discord.py, bot, YouTube, Reddit, GIF
+
+	\vspace{18pt}
+	\noindent{\Large{\bfseries{Abstract}}}
+	This work focuses on developing a Discord bot that provides various entertainment functions for Discord server users. The bot is implemented in Python using the discord.py library. Its main features include YouTube video playback, displaying Reddit posts, sending GIF animations, managing quotes and images. Emphasis is placed on code modularity and the easy extensibility of its functions.
+
+	\vspace{18pt}
+	\noindent{\large{\bfseries{Keywords}}}
+
+	\noindent Python, Discord API, discord.py, bot, YouTube, Reddit, GIF
+
+	\chapter*{Seznam použitých zkratek}
+	\begin{tabular}{ll}
+		API & Application Programming Interface,\\
+		HTTP & Hypertext Transfer Protocol,\\
+		JSON & JavaScript Object Notation,\\
+		REST & Representational State Transfer,\\
+		 SQL & Structured Query Language,\\
+		UI & User Interface.\\
+	\end{tabular}
+
+%% Definice příkazu pro podnadpisy v úvodu
+\newcommand{\introsubheading}[1]{%
+  {\noindent\textbf{\normalsize #1}\vspace{1pt}\par}%
+}
+
+\chapter*{ÚVOD}
+\addcontentsline{toc}{chapter}{Úvod}
+
+\introsubheading{Představení projektu}
+Discord se stal jednou z nejpopulárnějších komunikačních platforem, zejména v herní komunitě. S rostoucím počtem uživatelů roste i potřeba efektivní správy Discord serverů. Projekt Discord bota vznikl s cílem poskytnout uživatelům zábavné funkce. Bot využívá Discord API a je implementován v Pythonu s využitím knihovny discord.py.
+
+\introsubheading{Motivace}
+
+Hlavní motivací pro vytvoření tohoto bota byla snaha výrazně obohatit server o rozmanité a zábavné prvky, jako jsou vtipné příkazy a možnost přehrávání hudby. Cílem bylo vytvořit nástroj, který by nejen zlepšil celkovou atmosféru a interaktivitu na serveru, ale také poskytl uživatelům více příležitostí ke společné zábavě a sdílení hudebních zážitků.
+
+\introsubheading{Cíle projektu}
+Hlavním cílem bylo vytvořit modulární a snadno rozšiřitelného Discord bota s následujícími funkcemi:
+\begin{itemize}
+    \item Přehrávání YouTube videí včetně náhodného přehrávání.
+    \item Zobrazování příspěvků z Redditu.
+    \item Odesílání GIF animací.
+    \item Odesílání citátů.
+    \item Odesílání obrázků.
+    \item Základní příkazy pro interakci.
+    \item Textové příkazy.
+\end{itemize}
+
+\introsubheading{Struktura práce}
+Práce je rozdělena do několika hlavních částí:
+\begin{itemize}
+    \item Analýza požadavků a návrh řešení představuje cílové funkce a architekturu.
+    \item Implementační část detailně rozebírá realizaci jednotlivých komponent.
+    \item Testování a nasazení popisuje proces testování a nasazení bota.
+    \item Závěrečná část hodnotí výsledky a nabízí výhled do budoucna.
+\end{itemize}
+\chapter{Analýza a návrh}
+
+\section{Analýza požadavků}
+\subsection{Funkční požadavky}
+\begin{itemize}
+    \item Zábavné funkce
+    \begin{itemize}
+        \item YouTube přehrávač a náhodné přehrávání.
+        \item GIF animace.
+        \item Reddit příspěvky.
+        \item Poslání obrázků.
+        \item Náhodné citáty.
+        \item Probouzení uživatelů.
+    \end{itemize}
+    \item Správa příkazů
+    \begin{itemize}
+        \item Základní příkazy pro interakci.
+        \item Dynamické načítání cogů.
+        \item Textové příkazy.
+        \item Settings.py.
+    \end{itemize}
+\end{itemize}
+
+\section{Struktura projektu}
+\begin{lstlisting}[style=Python, caption=Struktura projektu]
+project/
+├── main.py           # Hlavní soubor bota
+├── settings.py       # Konfigurační soubor
+├── secret.py         # Soubor s klíči
+├── gifs.txt          # Soubor s odkazy na gif
+├── image             # Složka s obrázky
+├── fonts             # Složka s fonty
+└── cogs/
+    ├── basic.py         # Základní příkazy
+    ├── cog_manager.py   # Správa cogů
+    ├── gifs.py         # GIF příkazy
+    ├── image.py        # Poslání obrázků
+    ├── quote_cog.py    # Citáty
+    ├── random_youtube_play.py # Náhodné YouTube
+    ├── reddit.py       # Reddit příkazy
+    ├── wakeup.py      # Wake-up funkce
+    ├── write.py       # Textové příkazy
+    └── youtube.py     # YouTube přehrávač
+\end{lstlisting}
+\section{Vysvětlení pojmů}
+\subsection {Bot} V Discordu je bot automatizovaný program, který je navržený k tomu, aby vykonával různé úkoly na serverech (guildách) bez potřeby lidské interakce. Boti mohou být naprogramováni tak, aby reagovali na různé příkazy, události nebo prováděli specifické akce, jako je moderování, zábava, automatické odpovědi, hry, integrace s externími službami a mnoho dalšího.
+\subsection {Cog} V Discord botech (používajících knihovnu discord.py) je Cog způsob, jak organizovat a strukturovat kód do modulárních částí, což usnadňuje správu a údržbu bota, zejména když je bot větší a obsahuje více příkazů nebo funkcí. Cog je v podstatě třída nebo modul, který obsahuje související příkazy, události nebo funkce. Představ si, že máš různé části bota (například příkazy pro moderování, příkazy pro hry, příkazy pro hudbu atd.), každý z těchto bloků může být umístěn do samostatného cogu. To znamená, že místo toho, abys měl všechny příkazy v jednom souboru, můžeš je rozdělit do více souborů, což zjednoduší jejich správu.
+\section{Použité technologie}
+\subsection{Discord API}
+Discord API poskytuje rozhraní pro programování aplikací, které umožňuje vývojářům vytvářet boty a aplikace pro platformu Discord. Například:
+\begin{itemize}
+    \item Systém příkazů a událostí.
+\end{itemize}
+
+\subsection{Discord.py}
+Discord.py je Python knihovna pro práci s Discord API. Poskytuje:
+\begin{itemize}
+    \item Asynchronní přístup k API pomocí asyncio.
+    \item Systém extensions a cogs pro modularitu.
+\end{itemize}
+
+\subsection{Knihovna requests}
+Knihovna pro HTTP požadavky
+\subsection{Knihovna yt-dlp}
+Knihovna pro extrakci videí a zvukových stop z různých webových stránek, především z YouTube.
+\subsection{FFmpeg}
+Nástroj pro zpracování multimédií (audio a video).
+\subsection{Knihona asyncpraw}
+Asynchronní wrapper pro Praw (Python Reddit API Wrapper), což je knihovna, která poskytuje přístup k Reddit API.
+\begin{itemize}
+    \item Používá se pro získání příspěvků z Redditu.
+    \item Používá se zde asynchronní verze (async), což znamená, že operace s Redditem nejsou blokující a neovlivňují výkon bota.
+    \item Reddit API.
+\end{itemize}
+\subsection{Knihona Pillow}
+Knihovna pro práci s obrázky v Pythonu. Používá se k vytváření obrázků, vykreslování textu a ukládání obrázků ve formátu PNG.
+\subsection{Knihovna Textwrap}
+Knihovna pro zalamování textu do více řádků na základě šířky.
+\subsection{Knihovna io}
+Knihovna pro práci s binárními daty v paměti.
+
+\chapter{Použité postupy a řešení}
+
+\section{Settings.py}
+Soubor settings.py v Discord botu je soubor, který se používá k ukládání různých nastavení a konfigurací, které bot potřebuje k tomu, aby správně fungoval. Tento soubor může obsahovat různé informace, jako jsou API klíče, tokeny, ID serverů, příkazy pro bota a další nastavení.
+\subsection{Import tajných klíčů}
+Soubor \texttt{settings.py} importuje následující tajné klíče z \texttt{secret.py}:
+
+\begin{itemize}
+    \item \texttt{BOT\_TOKEN} - Token pro připojení bota k Discordu.
+    \item \texttt{REDDIT\_CLIENT\_ID} - Klientské ID pro připojení k Reddit API.
+    \item \texttt{REDDIT\_CLIENT\_SECRET} - Klientský tajný klíč pro připojení k Reddit API.
+\end{itemize}
+
+\subsection{Výchozí hodnoty}
+
+\begin{itemize}
+    \item \texttt{DEFAULT\_SUBREDDIT} - Výchozí subreddit, který se používá pro příkazy související s Redditem. Výchozí hodnota je \texttt{"memes"}.
+    \item \texttt{DEFAULT\_SORT} - Výchozí způsob řazení příspěvků z Redditu. Výchozí hodnota je \texttt{"hot"}.
+\end{itemize}
+
+\subsection{Platné možnosti řazení}
+
+\texttt{VALID\_SORTS} je množina možných hodnot pro řazení příspěvků z Redditu. Platné možnosti jsou:
+
+\begin{itemize}
+    \item \texttt{"hot"}.
+    \item \texttt{"new"}.
+    \item \texttt{"top"}.
+    \item \texttt{"rising"}.
+    \item \texttt{"controversial"}.
+\end{itemize}
+
+\subsection{Cesta k FFmpeg}
+
+\texttt{FFMPEG\_PATH} obsahuje cestu k souboru \texttt{ffmpeg.exe}, který je vyžadován pro správnou funkci přehrávání hudby z YouTube. Výchozí hodnota je:
+
+\[
+\texttt{C:/ffmpeg/bin/ffmpeg.exe}
+\]
+
+\subsection{Klíčová slova pro náhodné přehrávání}
+
+\texttt{KEYWORDS} je seznam klíčových slov, které se používají pro náhodné přehrávání hudby z YouTube. Tento seznam obsahuje různé žánry a typy hudby, například:
+
+\begin{itemize}
+    \item \texttt{"pop music"}.
+    \item \texttt{"rock hits"}.
+    \item \texttt{"top charts"}.
+    \item \texttt{"hip hop music"}.
+    \item \texttt{"indie songs"}.
+    \item \texttt{"jazz music"}.
+\end{itemize}
+
+\section{Secret.py}
+
+Soubor \texttt{secret.py} obsahuje následující tajné klíče, které jsou používány v celém projektu.
+
+\subsection{Bot Token}
+\texttt{BOT\_TOKEN} je token, který slouží k autentizaci a připojení bota k Discord API. Tento token je jedinečný pro každého bota a nesmí být veřejně sdílen. Hodnota tohoto tokenu je:
+
+\[
+\texttt{MTI4Nzc2NTg2MDI5OTMwOTExOA.GTFsAj.xE9C4bJ0CX7bq5nwcD-v\_e2l1nq7pmtQOgC1Aw}
+\]
+
+\subsection{Reddit API Přihlašovací Údaje}
+Pro připojení k Reddit API jsou potřeba následující přihlašovací údaje.
+
+\begin{itemize}
+    \item \texttt{REDDIT\_CLIENT\_ID} - Klientské ID pro autentizaci aplikace na Redditu. Hodnota tohoto ID je:
+    \[
+    \texttt{abcdefg1234567hijklmn89opqrst}
+    \]
+    
+    \item \texttt{REDDIT\_CLIENT\_SECRET} - Klientský tajný klíč pro autentizaci aplikace na Redditu. Hodnota tohoto klíče je:
+    \[
+    \texttt{zxy9876543210mnopqrstuvw}
+    \]
+\end{itemize}
+
+
+
+\section{Cog pro YouTube hudbu}
+
+Tento cog je určen pro přehrávání hudby z YouTube. Implementuje metody pro přehrávání skladeb a jejich zastavení v hlasovém kanálu na Discordu.
+
+\subsection{Popis funkcí}
+
+\begin{itemize}
+    \item \textbf{play(ctx, url)} \\
+    Tento příkaz přidá skladbu do fronty a spustí její přehrávání. Pokud bot není připojen v hlasovém kanálu, připojí se k němu.
+    
+    \item \textbf{stop(ctx)} \\
+    Tento příkaz zastaví aktuálně přehrávanou skladbu v hlasovém kanálu. Pokud žádná skladba nehraje, bot informuje uživatele.
+\end{itemize}
+
+\subsection{Závislosti}
+Pro funkčnost tohoto cogu je nutné mít nainstalované následující knihovny:
+\begin{itemize}
+    \item \texttt{discord.py} - Knihovna pro interakci s Discord API.
+    \item \texttt{yt-dlp} - Knihovna pro stahování a přehrávání hudby z YouTube.
+\end{itemize}
+
+Tento cog využívá \texttt{yt-dlp} pro stahování a extrakci zvuku z YouTube, který následně přehraje v hlasovém kanálu.
+
+\subsection{FFmpeg}
+Pro správné přehrávání hudby je třeba mít nainstalovaný \texttt{FFmpeg}. Cestu k binárkám FFmpeg specifikuje proměnná \texttt{FFMPEG\_PATH} v souboru \texttt{settings.py}.
+
+\section{Cog pro přehrávání náhodné hudby}
+
+Tento cog umožňuje přehrávání náhodně vybraných skladeb na základě klíčových slov. K dispozici jsou metody pro připojení do hlasového kanálu a přehrávání nebo zastavení hudby.
+
+\subsection{Popis funkcí}
+
+\begin{itemize}
+    \item \textbf{play\_random(ctx)} \\
+    Tato metoda připojí bota k hlasovému kanálu, pokud ještě není připojen, a začne přehrávat náhodně vybranou píseň. Písně jsou vybírány na základě klíčového slova z předdefinovaného seznamu (\texttt{KEYWORDS}). Pro každé klíčové slovo se provádí vyhledávání na YouTube, a první nalezený výsledek je přehrán.
+
+    \item \textbf{stop\_random(ctx)} \\
+    Tato metoda zastaví aktuální přehrávanou skladbu a odpojí bota od hlasového kanálu. Pokud bot není připojen k žádnému kanálu, informuje o tom uživatele a neprovádí žádnou akci.
+
+\end{itemize}
+
+\subsection{Náhodný výběr}
+Pro přehrávání skladeb bot používá náhodný výběr klíčového slova ze seznamu \texttt{KEYWORDS}, který je definován v souboru \texttt{settings.py}. Tento seznam obsahuje témata jako například \texttt{"pop music"}, \texttt{"rock hits"} nebo \texttt{"jazz music"}. Po výběru klíčového slova provádí bot vyhledávání na YouTube pomocí \texttt{yt-dlp} a přehraje první nalezený výsledek.
+
+\begin{lstlisting}[style=Python, caption=Náhodný Výběr klíčového slova a přehrávání hudby]
+import random
+
+class MusicPlayer(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.keywords = ["pop music", "rock hits", "top charts",
+         "hip hop music", "indie songs"]
+
+    async def play_next_song(self, ctx):
+        # Vyber náhodné klíčové slovo z listu
+        keyword = random.choice(self.keywords)
+        await ctx.send(f"Vybrané téma: **{keyword}**.
+         Hledám a přehrávám písničku...")
+
+        song_url = await self.search_youtube(keyword)
+
+        if not song_url:
+            await ctx.send(f"Nepodařilo se najít písničku
+             pro téma: {keyword}. Zkouším další...")
+            return await self.play_next_song(ctx)
+
+        # Přehrání nalezené skladby
+        source = discord.FFmpegPCMAudio(song_url, executable=FFMPEG_PATH)
+        self.voice_channel.play(source, after=lambda e:
+         self.bot.loop.create_task(self.after_song(ctx, e)))
+\end{lstlisting}
+
+V tomto příkladu kódu je náhodně vybráno klíčové slovo z proměnné \texttt{keywords}, která obsahuje seznam témat. Po výběru klíčového slova bot provede vyhledávání na YouTube a přehraje první nalezený výsledek.
+
+\subsection{Závislosti}
+Pro funkčnost tohoto cogu je nutné mít nainstalované následující knihovny:
+\begin{itemize}
+    \item \texttt{discord.py} - Knihovna pro interakci s Discord API.
+    \item \texttt{yt-dlp} - Knihovna pro stahování a přehrávání hudby z YouTube.
+\end{itemize}
+
+Tento cog využívá \texttt{yt-dlp} pro stahování a extrakci zvuku z YouTube, který následně přehraje v hlasovém kanálu.
+
+\subsection{FFmpeg}
+Pro správné přehrávání hudby je třeba mít nainstalovaný \texttt{FFmpeg}. Cestu k binárkám FFmpeg specifikuje proměnná \texttt{FFMPEG\_PATH} v souboru \texttt{settings.py}.
+
+\section{Cog pro zobrazení náhodného meme z Redditu}
+
+Tento cog umožňuje zobrazení náhodného meme obrázku z Redditu na základě zadaného subredditu a typu řazení. Uživatel může specifikovat subreddit a typ řazení, přičemž existují výchozí hodnoty.
+
+\subsection{Popis funkcí}
+
+\begin{itemize}
+    \item \textbf{meme(ctx, subreddit=None, sort\_type=None)} \\
+    Tato metoda umožňuje uživateli získat náhodný meme obrázek z Redditu. Uživatel může zadat název subredditu a typ řazení (např. "hot", "new", "top", "rising", "controversial"). Pokud nejsou tyto argumenty zadány, použijí se výchozí hodnoty definované v \texttt{settings.py}.
+    \begin{itemize}
+        \item \texttt{subreddit}: Název subredditu pro vyhledání meme (výchozí je nastavený v \texttt{settings.py}).
+        \item \texttt{sort\_type}: Typ řazení příspěvků na Redditu, např. "hot", "new", "top", "rising", nebo "controversial" (výchozí je nastavený v \texttt{settings.py}).
+    \end{itemize}
+    Metoda ověřuje platnost zadaného typu řazení a následně vybírá příspěvky z Redditu podle specifikovaných kritérií. Vybere náhodný příspěvek a zobrazí ho v embed zprávě.
+    
+    \item \textbf{cog\_unload()} \\
+    Tato metoda je volána při vypnutí cogu, kdy se zavře připojení k Reddit API. Používá se k uvolnění prostředků.
+\end{itemize}
+
+\subsection{Náhodný výběr meme}
+K získání náhodného meme obrázku bot používá metodu \texttt{choice()} pro náhodný výběr platného příspěvku z Redditu, který není již zobrazený. Platné příspěvky jsou filtrovány na základě formátu souboru a bezpečnosti (nevhodný obsah je vynechán).
+\vspace{\baselineskip}
+\begin{lstlisting}[style=Python, caption=Zobrazení náhodného meme z Redditu]
+import random
+import asyncpraw as praw
+
+class Reddit(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.reddit = praw.Reddit(
+            client_id=REDDIT_CLIENT_ID,
+            client_secret=REDDIT_CLIENT_SECRET,
+            user_agent="script:randommeme:v1.0
+             (by u/Agitated_Arachnid891)"
+        )
+        self.used_posts = set()
+
+    @commands.command()
+    async def meme(self, ctx: commands.Context,
+     subreddit: str = None, sort_type: str = None):
+        """
+        Zobrazí náhodný meme obrázek z vybraného subredditu a typu řazení.
+        """
+
+        subreddit = subreddit or DEFAULT_SUBREDDIT
+        sort_type = sort_type or DEFAULT_SORT
+
+        if sort_type not in VALID_SORTS:
+            await ctx.send(f"Invalid sort type '{sort_type}'.
+             Valid options are: {', '.join(VALID_SORTS)}.")
+            return
+
+        subreddit_obj = await self.reddit.subreddit(subreddit)
+        post_list = []
+
+        if sort_type == "hot":
+            async for post in subreddit_obj.hot(limit=30):
+                post_list.append(post)
+        elif sort_type == "new":
+            async for post in subreddit_obj.new(limit=30):
+                post_list.append(post)
+
+        # Výběr náhodného příspěvku
+        random_post = random.choice(post_list)
+
+        # Poslání odkazu na obrázek přímo
+        await ctx.send(f"Náhodný meme z r/{subreddit}: {random_post.url}
+         (Post created by {random_post.author.name if random_post.author
+          else 'N/A'})")
+
+        # Uložíme post.id jako zobrazený příspěvek
+        self.used_posts.add(random_post.id)
+
+        # Po zobrazení deseti příspěvků vyprázdníme seznam
+        if len(self.used_posts) >= 10:
+            self.used_posts.clear()
+
+    def cog_unload(self):
+        """
+        Zavře připojení k Reddit API při odinstalování cogu.
+        """
+        self.bot.loop.create_task(self.reddit.close())
+\end{lstlisting}
+\subsection{Závislosti}
+
+Pro spuštění tohoto cogu je potřeba nainstalovat následující závislosti:
+
+\begin{itemize}
+    \item \texttt{discord.py}: Knihovna pro interakci s Discord API.
+    \item \texttt{asyncpraw}: Asynchronní klient pro interakci s Reddit API. \newline
+\end{itemize}
+
+
+\section{MadaraCog - odesílání náhodného GIFu}
+
+Tento cog umožňuje odesílat náhodné GIFy na základě textového souboru, přičemž zajišťuje, že se nepošle ten samý GIF, který byl poslán naposledy. Také obsahuje příkaz pro odesílání GIFu s konkrétním odkazem.
+
+\subsection{Příkazy}
+
+\begin{itemize}
+    \item \textbf{madara}: Odesílá náhodný GIF ze souboru \texttt{gifs.txt}, přičemž zajišťuje, že není stejný jako ten předchozí.
+    \item \textbf{gif}: Odesílá pevně definovaný GIF.
+\end{itemize}
+
+\begin{lstlisting}[style=Python, caption=Implementace náhodného odesílání GIFu]
+    class MadaraCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.last_gif = None  # Uchování posledního GIFu
+
+    @commands.command(help="Pošle náhodný GIF z gifs.txt,
+     který není stejný jako poslední.")
+    async def madara(self, ctx):
+        try:
+            with open('gifs.txt', 'r') as file:
+                gifs = file.readlines()
+
+            gifs = [gif.strip() for gif in gifs]  # Odstranění bílých míst
+            random_gif = random.choice(gifs)
+            
+            while random_gif == self.last_gif:
+              # Zajištění, že GIF není stejný jako ten předchozí
+                random_gif = random.choice(gifs)
+
+            self.last_gif = random_gif
+            await ctx.send(random_gif)
+
+        except FileNotFoundError:
+            await ctx.send("Soubor gifs.txt nebyl nalezen!")
+        except Exception as e:
+            await ctx.send(f"Došlo k chybě: {e}")
+\end{lstlisting}
+
+\section{Quote Cog - Získávání náhodného citátu}
+Tento cog umožňuje uživatelům získat náhodný citát s autorem z veřejného API. Kód využívá API \texttt{zenquotes.io} pro získávání citátů a jejich odesílání do kanálu na Discordu.
+
+\subsection{Příkaz}
+
+\begin{itemize}
+    \item \textbf{quote}: Získává a zobrazuje náhodný citát s autorem.
+\end{itemize}
+
+\begin{lstlisting}[style=Python, caption=Získávání náhodného citátu z API]
+class Quote(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(help="Zobrazí náhodný citát z API.")
+    async def quote(self, ctx):
+        try:
+            # API endpoint pro náhodný citát
+            response = requests.get("https://zenquotes.io/api/random")
+
+            # Zkontroluj, zda je odpověď úspěšná (status kód 200)
+            if response.status_code == 200:
+                data = response.json()
+                # Extrahuj citát a autora z odpovědi API
+                quote = data[0]['q']
+                author = data[0]['a']
+
+                # Odešli citát do Discordu
+                await ctx.send(f'"{quote}" – {author}')
+            else:
+                # Pokud API neodpoví úspěšně, odešli chybovou zprávu
+                await ctx.send
+                ("Nemohu získat citát, zkuste to prosím později.")
+        except Exception as e:
+            # Zachytí chybu a odešle ji do Discordu
+            await ctx.send(f"Došlo k chybě: {str(e)}")
+\end{lstlisting}
+
+\subsection{Závislosti}
+
+Pro spuštění tohoto cogu je potřeba nainstalovat následující závislosti:
+
+\begin{itemize}
+    \item \texttt{discord.py}: Knihovna pro interakci s Discord API.
+    \item \texttt{requests}: Knihovna pro HTTP požadavky (pro získání citátu z API).
+\end{itemize}
+
+\section{Základní příkazy}
+Cog basic.py obsahuje základní interaktivní příkazy:
+\begin{itemize}
+    \item \texttt{ping}: Odpoví na příkaz \texttt{.ping} zprávou \texttt{"Pong!"}.
+    \item \texttt{pong}: Odpoví na příkaz \texttt{.pong} zprávou \texttt{"Ping!"}.
+    \item \texttt{hello}: Odpoví na příkaz \texttt{.hello} pozdravem, přičemž zmíní autora příkazu.
+\end{itemize}
+
+\begin{lstlisting}[style=Python, caption=Implementace základních příkazů]
+@commands.command(help="Odpoví na příkaz .ping s 'Pong!'")
+async def ping(self, ctx):
+    """
+    Odpoví na příkaz .ping s "Pong!".
+    """
+    await ctx.send("Pong!")
+
+@commands.command(help="Odpoví na příkaz .hello s pozdravem.")
+async def hello(self, ctx):
+    """
+    Odpoví na příkaz .hello s pozdravem.
+    """
+    await ctx.send(f'Ahoj, {ctx.author}!')
+\end{lstlisting}
+\section{Image Cog}
+Tento cog umožňuje odesílání obrázků ze složky.
+\begin{itemize}
+    \item \texttt{image [číslo obrázku]}: Odesílá obrázek ze složky \texttt{./image}. Pokud není číslo zadáno, obrázek je vybrán náhodně.
+    \item \texttt{list\_images}: Vypíše seznam všech obrázků ve složce \texttt{./image}, seřazených podle čísel.
+\end{itemize}
+\begin{lstlisting}[style=Python, caption=Ukázka příkazu]    
+    def __init__(self, bot):
+        self.bot = bot
+        self.image_folder = "./image"  # Cesta ke složce s obrázky
+        @commands.command(name="image", help="Pošle obrázek ze složky.
+         Zadejte číslo obrázku nebo nechte náhodně vybrat.")
+        async def send_image(self, ctx, image_number: int = None):
+        if image_number is not None:
+        if 1 <= image_number <= len(images):
+            selected_image = images[image_number - 1]
+        else:
+            await ctx.send(f"Zadejte číslo mezi 1 a {len(images)}.")
+            return
+    else:
+        selected_image = random.choice(images)
+\end{lstlisting}
+\begin{itemize}
+    \item  \texttt{discord.py}: Knihovna pro interakci s Discord API.
+\end{itemize}
+\section{Write Cog}
+Tento cog vznikl po několika hodinách diskuzí s ChatGPT. Původně jsem měl v úmyslu implementovat funkci, která by generovala obrázky na základě textu zadaného uživatelem pomocí AI. Během vývoje se však objevily problémy s přístupem k AI a problémy s verzí programu, nakonec jsem  skončil u funkce, která vykreslí zadaný text na bílé pozadí ve vybraném písmu. I když to nebyl původní záměr, výsledek je krásný sám o sobě, zejména když je kombinován s příkazem quote.
+\chapter{Výsledky}
+\section{Splněné cíle}
+V rámci projektu se mi podařilo úspěšně implementovat funkce.
+\begin{itemize}
+    \item Přehrávání hudby z YouTube.
+    \begin{figure}[H]
+        \includegraphics[width=0.45\linewidth]{images/youtube.png}
+        \caption{Ukázka z YouTube}
+        \label{fig:youtube}
+    \end{figure}
+    \item Náhodné přehrávání hudby.
+    \item Posílání příspěvků z Redditu.
+    \begin{figure}[H]
+        \includegraphics[width=0.45\linewidth]{images/ukazka_meme.png}
+        \caption{Ukázka meme z Redditu}
+        \label{fig:reddit}
+    \end{figure}
+    \item Posílání citátů.
+    \begin{figure}[H]
+        \includegraphics[width=\linewidth]{images/quote.png}
+        \caption{Ukázka citátu}
+        \label{fig:quote}
+    \end{figure}
+    \item Posílání obrázků.
+    \begin{figure}[H]
+        \includegraphics[width=0.5\linewidth]{images/image_ukazka.png}
+        \caption{Ukázka obrázku}
+        \label{fig:image}
+    \end{figure}
+    \newpage
+    \item Posílání GIFů.
+    \begin{figure}[H]
+        \includegraphics[width=0.5\linewidth]{images/gif_ukazka.png}
+        \caption{Ukázka GIFu}
+        \label{fig:gif}
+    \end{figure}
+\end{itemize}
+\section{Zhodnocení projektu}
+Projekt rozšířil možnosti komunikace na serveru a obohatil je o několik zábavných funkcí.
+\section{Budoucí rozvoj}
+Na základě zkušeností z vývoje a zpětné vazby uživatelů byly identifikovány oblasti pro další rozvoj aplikace.
+Možná vylepšení:
+\begin{itemize}
+    \item Spojení funkce vykreslení textu na obrázek a funkce s citáty.
+    \item Vylepšení náhodného přehrávání hudby z YouTube.
+    \item Rozšíření přehrávání hudby o Spotify.
+    \item Nové upozornění na hry zdarma.
+\end{itemize}
+\chapter{Závěr}
+Discord bot byl úspěšně implementován jako zábavný nástroj pro Discord servery. Hlavní funkce zahrnují:
+\begin{itemize}
+    \item Přehrávání hudby z YouTube včetně náhodného přehrávání.
+    \item Zobrazování meme obrázků z Redditu.
+    \item Odesílání GIF animací.
+    \item Zobrazování náhodných citátů.
+    \item Základní interaktivní příkazy.
+    \item Systém probouzení uživatelů.
+    \item Textové příkazy.
+\end{itemize}
+Zdrojový kód projektu je dostupný na GitHubu: \newline
+\href{https://github.com/JirkaITRojek/mat_project/tree/master}{https://github.com/JirkaITRojek/mat_project/tree/master}.
+Bot je implementován v Pythonu s využitím knihovny discord.py a využívá modulární architekturu založenou na systému cogů. Tato architektura umožňuje snadné přidávání nových funkcí a údržbu kódu.
+Při vytváření tohoto projektu byly použity různé nástroje a technologie, včetně generativního jazykového modelu ChatGPT (verze 4), který pomohl při generování textu, návrhu struktury projektu a asistoval při analýze nápadů. Tento nástroj byl využit pro zefektivnění práce a urychlení procesu.
+
+\chapter*{Seznam použitých informačních zdrojů}
+\addcontentsline{toc}{chapter}{Seznam použitých informačních zdrojů}
+\begin{itemize}
+    \item [1] YouTube tutoriál k základům - \newline \url{https://www.youtube.com/watch?v=93DrbetB6oM&list=PLwqYQaS6jxfmCUTbFU-_d5M4yGTmKS0gk&index=11&ab_channel=Paradoxial}.
+    \item [2] YouTube tutoriál k Redditu - \newline \url{https://www.youtube.com/watch?v=eblCb7LQ_pc&list=PLwqYQaS6jxfmCUTbFU-_d5M4yGTmKS0gk&index=6&ab_channel=Paradoxial}.
+    \item [3] YouTube tutoriál k YouTube - \newline \url{https://www.youtube.com/watch?v=dRHUW_KnHLs&ab_channel=Computeshorts}.
+    \item [4] asyncio Documentation - \newline \url{https://docs.python.org/3/library/asyncio.html}.
+\end{itemize}
+
+\end{document}
