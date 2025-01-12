@@ -34,7 +34,7 @@ class MadaraCog(commands.Cog):
             await ctx.send(f"Došlo k chybě: {e}")
 
     @commands.command(help="Pošle GIF, který reprezentuje 'I like women'.")
-    async def ilikewomen(self, ctx):
+    async def gif(self, ctx):
         gif_url = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXg1OGI3azA1emYwZ2ZkcHdoYnAzMTh3eWtjNmJ4Z3B4cHk4cGc1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/I6n8YSKRIJqPwGll4n/giphy.gif"  # Zde vložte odkaz na váš GIF
         await ctx.send(gif_url)
 
